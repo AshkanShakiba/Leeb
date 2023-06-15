@@ -6,10 +6,16 @@ from .models import LeebUser
 class LeebUserCreationForm(UserCreationForm):
     class Meta(UserCreationForm):
         model = LeebUser
-        fields = UserCreationForm.Meta.fields + ("credit",)
+        fields = UserCreationForm.Meta.fields + ("email", "credit",)
 
 
 class LeebUserChangeForm(UserChangeForm):
     class Meta(UserChangeForm):
         model = LeebUser
         fields = UserChangeForm.Meta.fields
+
+
+class LeebUserSignUpForm(UserCreationForm):
+    class Meta(UserCreationForm):
+        model = LeebUser
+        fields = UserCreationForm.Meta.fields + ("email",)
