@@ -3,11 +3,21 @@
 {% block title %}Leeb Home{% endblock title %}
 
 {% block content %}
-    {% if user.is_authenticated %}
-        Hi {{ user.username }}!
-        <p><a href="{% url 'logout' %}">Log Out</a></p>
-    {% else %}
-        <a href="{% url 'login' %}">Log In</a> |
-        <a href="{% url 'signup' %}">Sign Up</a>
-    {% endif %}
+    <div class="row">
+        {% for book in books %}
+            <div class="column">
+                <div class="content">
+                    {% if book.cover %}
+                        <img src="{{ book.cover.url }}"
+                             alt="{{ book.name }}" style="width:100%">
+                    {% else %}
+                        <img src="https://www.salonlfc.com/wp-content/uploads/2018/01/image-not-found-scaled.png"
+                             alt="{{ book.name }}" style="width:100%">
+                    {% endif %}
+                    <h3>{{ book.name }}</h3>
+                    <p>{{ book.author }}</p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
 {% endblock content %}
