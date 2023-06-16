@@ -88,6 +88,9 @@ class Purchase(models.Model):
     date = models.DateField(auto_now_add=True)
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        self.customer.credit -= self.book.price
+        self.customer.save()
+
         self.book.available_to_purchase -= 1
         self.book.save()
 
