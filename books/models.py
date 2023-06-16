@@ -1,5 +1,5 @@
 from math import floor
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 from django.db import models
 
 from accounts.models import LeebUser
@@ -55,6 +55,31 @@ class Borrow(models.Model):
 
     def __str__(self):
         return f"{self.borrower}, {self.book}, {self.date}"
+
+    def revenue(self):
+        borrow_date = self.date
+        delivery_date = self.delivery_date
+        delivery_deadline = self.delivery_deadline
+        if delivery_date is None:
+            delivery_date = date.today()
+        borrow_days = (delivery_date - borrow_date).days
+        if borrow_days > delivery_deadline:
+            return delivery_deadline * self.book.category.daily_borrow_cost + \
+                   (borrow_days - delivery_deadline) * self.book.category.daily_borrow_penalty
+        else:
+            return borrow_days * self.book.category.daily_borrow_cost
+
+    def penalty(self):
+        borrow_date = self.date
+        delivery_date = self.delivery_date
+        delivery_deadline = self.delivery_deadline
+        if delivery_date is None:
+            delivery_date = date.today()
+        borrow_days = (delivery_date - borrow_date).days
+        if borrow_days > delivery_deadline:
+            return (borrow_days - delivery_deadline) * self.book.category.daily_borrow_penalty
+        else:
+            return 0
 
 
 class Purchase(models.Model):

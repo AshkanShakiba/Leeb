@@ -1,10 +1,11 @@
-from django.shortcuts import render
+from datetime import date
+from django.shortcuts import render, redirect, reverse
 from django.urls import reverse_lazy
-from django.views.generic import CreateView
+from django.views.generic import CreateView, TemplateView
 from django_filters.views import FilterView
 from django_tables2 import SingleTableMixin
 
-from .models import Book
+from .models import Book, Category, Borrow, Purchase
 from .forms import BorrowCreationForm, PurchaseCreationForm, \
     BookFilterFormHelper, BorrowFilterFormHelper, PurchaseFilterFormHelper
 from .tables import BookTable, BorrowTable, PurchaseTable
@@ -59,3 +60,33 @@ class SearchPurchaseView(FilteredSingleTableView):
     paginate_by = 25
     filterset_class = PurchaseFilter
     formhelper_class = PurchaseFilterFormHelper
+
+
+class RevenueReportView(TemplateView):
+    template_name = "bar_chart.html"
+
+    def get_context_data(self, **kwargs):
+        labels = []
+        values = []
+        for category in Category.objects.all():
+            value = 0
+            for borrow in Borrow.objects.filter(book__category=category):
+                value += borrow.revenue()
+            for purchase in Purchase.objects.filter(book__category=category):
+                value += purchase.book.price
+            labels.append(category.name)
+            values.append(value)
+        return {
+            "labels": labels,
+            "values": values,
+            "title": "Revenue Report",
+        }
+
+
+def delivery_registration(request, pk):
+    borrow = Borrow.objects.get(id=pk)
+    if borrow.delivery_date is None:
+        borrow.delivery_date = date.today()
+        borrow.save()
+
+    return redirect(reverse("search_borrows"))
