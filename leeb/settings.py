@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     # third party:
     "crispy_forms",
     "crispy_bootstrap5",
+    "django_tables2",
+    "django_filters",
     # local
     "accounts.apps.AccountsConfig",
     "pages.apps.PagesConfig",

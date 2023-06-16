@@ -31,8 +31,26 @@
                                 {{ user.username }}
                             </a>
                             <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1">
-                                <li><a class="dropdown-item" href="{% url 'password_change' %}">Change Password</a></li>
-                                <li><a class="dropdown-item" href="{% url 'logout' %}">Log Out</a></li>
+                                <li><a class="dropdown-item" href="{% url 'search_books' %}">
+                                    Search for Books</a></li>
+                                <li><a class="dropdown-item" href="{% url 'search_borrows' %}">
+                                    Search for Borrows</a></li>
+                                <li><a class="dropdown-item" href="{% url 'search_purchases' %}">
+                                    Search for Purchases</a></li>
+                                <li><a class="dropdown-item" href="{% url 'borrow_registration' %}">
+                                    Borrow Registration</a></li>
+                                <li><a class="dropdown-item" href="{% url 'delivery_registration' %}">
+                                    Delivery Registration</a></li>
+                                <li><a class="dropdown-item" href="{% url 'purchase_registration' %}">
+                                    Purchase Registration</a></li>
+                                <li><a class="dropdown-item" href="{% url 'revenue_report' %}">
+                                    Revenue Report</a></li>
+                                <li><a class="dropdown-item" href="{% url 'fines_report' %}">
+                                    Fines Report</a></li>
+                                <li><a class="dropdown-item" href="{% url 'password_change' %}">
+                                    Change Password</a></li>
+                                <li><a class="dropdown-item" href="{% url 'logout' %}">
+                                    Logout</a></li>
                             </ul>
                         </div>
                     {% else %}
