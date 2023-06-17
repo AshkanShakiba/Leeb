@@ -6,7 +6,8 @@ from .models import Book, Borrow, Purchase
 class BookTable(Table):
     class Meta:
         model = Book
-        fields = ("id", "name", "author", "category", "price", "available_to_borrow", "available_to_purchase")
+        fields = ("id", "name", "author", "category", "price",
+                  "available_to_borrow", "available_to_purchase", "borrows_count")
 
 
 class BorrowTable(Table):

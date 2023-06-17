@@ -44,7 +44,8 @@ class BorrowView(AdminMixin, CreateView):
             }
             return redirect("error")
 
-        if Borrow.objects.filter(borrower=form.instance.borrower, book__category=form.instance.book.category
+        if Borrow.objects.filter(borrower=form.instance.borrower,
+                                 book__category=form.instance.book.category, delivery_date__isnull=True
                                  ).count() + 1 > form.instance.book.category.max_allowed_count_on_borrow:
             ErrorView.error = {
                 "error_title": "Reached Max Allowed Borrow Count of Category",
@@ -170,6 +171,9 @@ def delivery_registration(request, pk):
 
         borrow.borrower.credit -= borrow.revenue()
         borrow.borrower.save()
+
+        borrow.book.available_to_borrow += 1
+        borrow.book.save()
 
     return redirect(reverse("search_borrows"))
 

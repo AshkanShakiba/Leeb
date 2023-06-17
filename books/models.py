@@ -27,6 +27,9 @@ class Book(models.Model):
     def __str__(self):
         return self.name
 
+    def borrows_count(self):
+        return Borrow.objects.filter(book=self).count()
+
 
 class Borrow(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
@@ -40,16 +43,17 @@ class Borrow(models.Model):
         return Borrow.objects.filter(book=self.book, date__gte=date).count()
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
-        n = self.book.available_to_borrow
-        delivery_deadline = floor((30 * n) / (n + self.f(30))) + 1
+        if self.delivery_date is None:
+            n = self.book.available_to_borrow
+            delivery_deadline = floor((30 * n) / (n + self.f(30))) + 1
 
-        if delivery_deadline < 3:
-            self.delivery_deadline = 3
-        else:
-            self.delivery_deadline = delivery_deadline
+            if delivery_deadline < 3:
+                self.delivery_deadline = 3
+            else:
+                self.delivery_deadline = delivery_deadline
 
-        self.book.available_to_borrow -= 1
-        self.book.save()
+            self.book.available_to_borrow -= 1
+            self.book.save()
 
         super().save(force_insert=force_insert, force_update=force_update, using=using, update_fields=update_fields)
 
