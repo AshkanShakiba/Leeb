@@ -1,7 +1,7 @@
 from datetime import date
 from django.shortcuts import render, redirect, reverse
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, TemplateView
+from django.views.generic import CreateView, TemplateView, DetailView
 from django_filters.views import FilterView
 from django_tables2 import SingleTableMixin
 
@@ -164,3 +164,7 @@ def delivery_registration(request, pk):
         borrow.borrower.save()
 
     return redirect(reverse("search_borrows"))
+
+
+class BookDetailView(DetailView):
+    model = Book

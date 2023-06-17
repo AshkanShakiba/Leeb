@@ -6,17 +6,19 @@
     <div class="row">
         {% for book in books %}
             <div class="column">
-                <div class="content">
-                    {% if book.cover %}
-                        <img src="{{ book.cover.url }}"
-                             alt="{{ book.name }}" style="width:100%">
-                    {% else %}
-                        <img src="https://www.salonlfc.com/wp-content/uploads/2018/01/image-not-found-scaled.png"
-                             alt="{{ book.name }}" style="width:100%">
-                    {% endif %}
-                    <h3>{{ book.name }}</h3>
-                    <p>{{ book.author }}</p>
-                </div>
+                <a href="{% url 'book_detail' book.id %}" style="text-decoration: none; color: inherit">
+                    <div class="content">
+                        {% if book.cover %}
+                            <img src="{{ book.cover.url }}"
+                                 alt="{{ book.name }}" style="width:100%">
+                        {% else %}
+                            <img src="https://www.salonlfc.com/wp-content/uploads/2018/01/image-not-found-scaled.png"
+                                 alt="{{ book.name }}" style="width:100%">
+                        {% endif %}
+                        <h3>{{ book.name }}</h3>
+                        <p>{{ book.author }}</p>
+                    </div>
+                </a>
             </div>
         {% endfor %}
     </div>

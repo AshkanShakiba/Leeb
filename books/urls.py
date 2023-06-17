@@ -1,9 +1,10 @@
 from django.urls import path
 
 from .views import BorrowView, PurchaseView, SearchBookView, SearchBorrowView, SearchPurchaseView, \
-    RevenueReportView, delivery_registration, ErrorView
+    RevenueReportView, delivery_registration, ErrorView, BookDetailView
 
 urlpatterns = [
+    path("<int:pk>", BookDetailView.as_view(), name="book_detail"),
     path("search/books", SearchBookView.as_view(), name="search_books"),
     path("search/borrows", SearchBorrowView.as_view(), name="search_borrows"),
     path("search/purchases", SearchPurchaseView.as_view(), name="search_purchases"),
