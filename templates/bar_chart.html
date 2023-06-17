@@ -10,14 +10,26 @@
         const myChart = new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: [{% for item in labels %}"{{ item }}",{% endfor %}],
-                datasets: [{
-                    label: 'Revenue of Categories',
-                    data: [{% for item in values %}{{ item }}, {% endfor %}],
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 1
-                }]
+                labels: [{% for item in categories %}"{{ item }}",{% endfor %}],
+                datasets: [
+                    {
+                        label: 'Borrow Revenue',
+                        data: [{% for item in borrows %}{{ item }}, {% endfor %}],
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Purchase Revenue',
+                        data: [{% for item in purchases %}{{ item }}, {% endfor %}],
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Total Revenue',
+                        data: [{% for item in totals %}{{ item }}, {% endfor %}],
+                        {#backgroundColor: 'rgba(75, 192, 192, 0.2)',#}
+                        {#borderColor: 'rgba(75, 192, 192, 1)',#}
+                        borderWidth: 1
+                    }
+                ]
             },
             options: {
                 scales: {

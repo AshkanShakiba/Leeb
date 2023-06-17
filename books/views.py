@@ -145,19 +145,31 @@ class RevenueReportView(AdminMixin, TemplateView):
     template_name = "bar_chart.html"
 
     def get_context_data(self, **kwargs):
-        labels = []
-        values = []
+        categories = []
+        borrows = []
+        purchases = []
+        totals = []
         for category in Category.objects.all():
-            value = 0
+            total_revenue = 0
+            borrow_revenue = 0
+            purchase_revenue = 0
             for borrow in Borrow.objects.filter(book__category=category):
-                value += borrow.revenue()
+                revenue = borrow.revenue()
+                borrow_revenue += revenue
+                total_revenue += revenue
             for purchase in Purchase.objects.filter(book__category=category):
-                value += purchase.book.price
-            labels.append(category.name)
-            values.append(value)
+                price = purchase.book.price
+                purchase_revenue += price
+                total_revenue += price
+            categories.append(category.name)
+            borrows.append(borrow_revenue)
+            purchases.append(purchase_revenue)
+            totals.append(total_revenue)
         return {
-            "labels": labels,
-            "values": values,
+            "categories": categories,
+            "borrows": borrows,
+            "purchases": purchases,
+            "totals": totals,
             "title": "Revenue Report",
         }
 
