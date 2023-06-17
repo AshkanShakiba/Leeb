@@ -2,6 +2,8 @@ from datetime import date
 from django.shortcuts import render, redirect, reverse
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, TemplateView, DetailView
+from django.contrib.auth.mixins import UserPassesTestMixin
+from django.contrib.admin.views.decorators import staff_member_required
 from django_filters.views import FilterView
 from django_tables2 import SingleTableMixin
 
@@ -10,6 +12,11 @@ from .forms import BorrowCreationForm, PurchaseCreationForm, \
     BookFilterFormHelper, BorrowFilterFormHelper, PurchaseFilterFormHelper
 from .tables import BookTable, BorrowTable, PurchaseTable
 from .filters import BookFilter, BorrowFilter, PurchaseFilter
+
+
+class AdminMixin(UserPassesTestMixin):
+    def test_func(self):
+        return self.request.user.is_staff
 
 
 class ErrorView(TemplateView):
@@ -22,7 +29,7 @@ class ErrorView(TemplateView):
         return error
 
 
-class BorrowView(CreateView):
+class BorrowView(AdminMixin, CreateView):
     form_class = BorrowCreationForm
     template_name = "books/borrow.html"
     success_url = reverse_lazy("home")
@@ -71,7 +78,7 @@ class BorrowView(CreateView):
         return super().form_valid(form)
 
 
-class PurchaseView(CreateView):
+class PurchaseView(AdminMixin, CreateView):
     form_class = PurchaseCreationForm
     template_name = "books/purchase.html"
     success_url = reverse_lazy("home")
@@ -109,7 +116,7 @@ class FilteredSingleTableView(SingleTableMixin, FilterView):
         return filterset
 
 
-class SearchBookView(FilteredSingleTableView):
+class SearchBookView(AdminMixin, FilteredSingleTableView):
     template_name = "search.html"
     table_class = BookTable
     paginate_by = 25
@@ -117,7 +124,7 @@ class SearchBookView(FilteredSingleTableView):
     formhelper_class = BookFilterFormHelper
 
 
-class SearchBorrowView(FilteredSingleTableView):
+class SearchBorrowView(AdminMixin, FilteredSingleTableView):
     template_name = "search.html"
     table_class = BorrowTable
     paginate_by = 25
@@ -125,7 +132,7 @@ class SearchBorrowView(FilteredSingleTableView):
     formhelper_class = BorrowFilterFormHelper
 
 
-class SearchPurchaseView(FilteredSingleTableView):
+class SearchPurchaseView(AdminMixin, FilteredSingleTableView):
     template_name = "search.html"
     table_class = PurchaseTable
     paginate_by = 25
@@ -133,7 +140,7 @@ class SearchPurchaseView(FilteredSingleTableView):
     formhelper_class = PurchaseFilterFormHelper
 
 
-class RevenueReportView(TemplateView):
+class RevenueReportView(AdminMixin, TemplateView):
     template_name = "bar_chart.html"
 
     def get_context_data(self, **kwargs):
@@ -154,6 +161,7 @@ class RevenueReportView(TemplateView):
         }
 
 
+@staff_member_required(login_url="login")
 def delivery_registration(request, pk):
     borrow = Borrow.objects.get(id=pk)
     if borrow.delivery_date is None:
