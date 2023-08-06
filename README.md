@@ -2,6 +2,8 @@
 
 Library Management System, developed with [Django](https://github.com/django/django).
 
+![screenshot](screenshot.jpg)
+
 
 ## how to run
 
